@@ -17,36 +17,55 @@
 *************************************************************************
 * Change Log:
 *   01/17/2018: Initial release. JME
+*   03/10/2018: Add bounds checking. JME
 *************************************************************************/
 #include <iostream>  // cin/cout/endl
 #include <algorithm> // min
-#include <vector>   
+#include <cassert>
 
 using namespace std;
 
 // Recursive minimum template function.
-template <typename T>
-T recursiveMinimum(T t[], size_t index, const size_t end) {
+template<typename T, size_t n>
+T rMin(const T (&t)[n], const size_t index, const size_t end) {
+	// bounds check arary.
+	if (index < T{ 0 } || end < index || index + 1 > n || end + 1 > n)
+		throw invalid_argument("index/end out of bounds");
+	// Tail recursion.
 	if (index == end)
 		return t[index];
 	else
-		return min(t[index], recursiveMinimum(t, index + 1, end));
+		return min(t[index], rMin(t, index + 1, end));
 }
 
 int main()
 {
 	// Test recursive function with int, vector, double and chars
 	int a1[]{ 10, 8, 8, 5, -2, 0, 10, 4, 3, 1 };
-	cout << recursiveMinimum(a1, 0, 9) << endl;
-
-	vector<int> a2{ 10, 1, 9, -2, 8, 3, 7, 4, 6, 5 };
-	cout << recursiveMinimum(&a2[0], 0, a2.size() - 1) << endl;
-
+	char a2[]{ 'a', '?', 'a', 'A', 'z', '1', '!' };
 	double a3[]{ 10., 8.1, 0.8, 5.25, 10., 0, -2. };
-	cout << recursiveMinimum(a3, 0, 6) << endl;
-	
-	char a4[]{ 'a', '!', 'a', 'A', 'z', '1', '?' };
-	cout << recursiveMinimum(a4, 0, 6) << endl;
+
+	try
+	{
+		// Test with integers.
+		assert(rMin(a1, 0, 9) == -2);
+		assert(rMin(a1, 9, 9) == 1);
+		assert(rMin(a1, 0, 0) == 10);
+		assert(rMin(a1, 5, 9) == 0);
+
+		// Test with characters.
+		assert(rMin(a2, 0, 6) == '!');
+		
+		// Test with floating point.
+		assert(rMin(a3, 0, 6) == -2.);
+	}
+	catch (exception& e)
+	{
+		cout << e.what() << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	cout << "Recurive Minimum passes test!\n";
 
 	return 0;
 }
