@@ -40,7 +40,7 @@ T rMin(const T (&t)[n], const size_t index, const size_t end) {
 
 int main()
 {
-	// Test recursive function with int, vector, double and chars
+	// Test recursive function with int, chars and double.
 	int a1[]{ 10, 8, 8, 5, -2, 0, 10, 4, 3, 1 };
 	char a2[]{ 'a', '?', 'a', 'A', 'z', '1', '!' };
 	double a3[]{ 10., 8.1, 0.8, 5.25, 10., 0, -2. };
